@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import {
   Button,
   Card,
@@ -7,12 +6,13 @@ import {
   CardMedia,
   Typography,
 } from '@mui/material'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { RightAngleIcon } from '../../atoms/Icons/Icons'
 import { Character } from '../../types/rickyAndMontyApi'
 
 //  profile card shows basic details of a character
-//  By clicking the "See Profile" button in the card, user goes to profile page of that character which shows all the details
+//  By clicking the 'See Profile' button in the card, user goes to profile page of that character which shows all the details
 const ProfileCard = ({ character }: { character: Character }) => {
   return (
     <Card>
@@ -44,9 +44,9 @@ const ProfileCard = ({ character }: { character: Character }) => {
         </Typography>
       </CardContent>
 
-      {/* Button and other actions goes in the "CardActions" */}
+      {/* Button and other actions goes in the 'CardActions' */}
       <CardActions>
-        {/*   By clicking the "See Profile" button/link below, user goes to profile page of the character which shows all the details of the character */}
+        {/*   By clicking the 'See Profile' button/link below, user goes to profile page of the character which shows all the details of the character */}
         <Link to={`/character/${character.id}`}>
           <Button variant="outlined" endIcon={<RightAngleIcon />}>
             See profile
@@ -60,10 +60,10 @@ const ProfileCard = ({ character }: { character: Character }) => {
 export default ProfileCard
 
 // Styling image of the card
-const StyledCardMedia = styled<any>(CardMedia)`
+const StyledCardMedia = styled(CardMedia)`
   &.MuiCardMedia-img {
     object-fit: contain;
     width: 70%;
     margin: auto;
   }
-`
+` as typeof CardMedia

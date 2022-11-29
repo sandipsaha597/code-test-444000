@@ -5,17 +5,18 @@ import { rickAndMorty } from './utilVariables'
 // takes characterId and returns the character's info
 export const getCharacterInfo = async (
   characterId: number,
-  characters?: Character[],
+  characters: Character[] = [],
 ) => {
   // if character is not available locally, fetch it from the api
-  let character = {}
-  character = characters?.find((v) => v.id === characterId) || {}
-  if (Object.keys(character).length === 0) {
-    const { data: characterInfo } = await axios.get(
+  const character = characters.find((v) => v.id === characterId)
+  if (character) return character
+  try {
+    const { data: characterInfo } = await axios.get<Character>(
       `${rickAndMorty.character}/${characterId}`,
     )
-    character = characterInfo
+    return characterInfo
+  } catch (error) {
+    console.error(error)
+    return 'character not found'
   }
-
-  return character
 }

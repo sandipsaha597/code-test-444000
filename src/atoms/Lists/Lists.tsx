@@ -1,7 +1,12 @@
 import { Typography } from '@mui/material'
+import { ProfileDataInterface } from '../../pages/ProfilePage'
 
 // This components shows profile data in a list view
-const ProfileDataList = ({ profileData }: any) => {
+const ProfileDataList = ({
+  profileData,
+}: {
+  profileData: ProfileDataInterface
+}) => {
   return (
     <>
       <ul>
@@ -21,12 +26,12 @@ const ProfileDataList = ({ profileData }: any) => {
           <Typography>Status: {profileData.status}</Typography>
         </li>
         <li>
-          <Typography>Origin: {profileData.origin?.name}</Typography>
+          <Typography>Origin: {profileData.origin.name}</Typography>
         </li>
 
         {/* if "origin.url" is an empty string or origin.name is unknown  */}
         {/* then origin(.type, .dimension, .residents) won't exist */}
-        {profileData.origin?.url && (
+        {profileData.origin.url && (
           <>
             <li>
               <Typography>Origin Type: {profileData.origin.type}</Typography>
@@ -46,13 +51,11 @@ const ProfileDataList = ({ profileData }: any) => {
         )}
 
         <li>
-          <Typography>
-            Current Location: {profileData.location?.name}
-          </Typography>
+          <Typography>Current Location: {profileData.location.name}</Typography>
         </li>
         {/* if "location.url" is an empty string or location.name is unknown  */}
         {/* then location(.type, .dimension, .residents) won't exist */}
-        {profileData.location?.url && (
+        {profileData.location.url && (
           <>
             <li>
               <Typography>

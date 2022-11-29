@@ -6,10 +6,23 @@ import { createContext, useCallback, useState } from 'react'
 import { Character, Info } from '../types/rickyAndMontyApi'
 import { rickAndMorty } from '../utils/utilVariables'
 
-// TODO: don't have :any
-export const AppContext = createContext<any>({})
+interface AppContextInterface {
+  states: {
+    characters: {
+      loading: boolean
+      data: Info<Character[]>
+      errorMsg?: string
+    }
+  }
+  actions: {
+    fetchAndSetCharacters: (pageNumber?: number | string) => void
+  }
+}
 
-const AppProvider = ({ children }: any) => {
+// @ts-expect-error defaultValue of createContext won't matter
+export const AppContext = createContext<AppContextInterface>({})
+
+const AppProvider = ({ children }: { children: JSX.Element }) => {
   // "characters" state have 20 characters at a time.
   // Which 20 character depends on the current page
   // "character.data" contains the array of character
@@ -26,38 +39,43 @@ const AppProvider = ({ children }: any) => {
 
   // Will fetch and set the characters for a particular page
   // It sets the "characters" state above
-  const fetchAndSetCharacters = useCallback(async (pageNumber = 1) => {
-    try {
-      // setting the "characters.loading" property to true while data is being fetched
-      // deleting the "characters.errorMsg" property in-case it exists
-      setCharacters((characters) => {
-        return produce(characters, (draft) => {
-          draft.loading = true
-          delete draft.errorMsg
-        })
-      })
-      const { data } = await axios.get(
-        // If "pageNumber" is not an integer, the api is returning the page 1 with 200 status code
-        `${rickAndMorty.character}/?page=${pageNumber}`,
-      )
-      setCharacters((characters) => {
-        return produce(characters, (draft) => {
-          draft.loading = false
-          draft.data = data
-        })
-      })
-    } catch (error) {
-      setCharacters((characters) => {
-        return produce(characters, (draft) => {
-          draft.loading = false
-          draft.errorMsg = 'Failed to fetch characters'
-        })
-      })
-    }
-  }, [])
+  const fetchAndSetCharacters = useCallback(
+    (pageNumber: number | string = 1) => {
+      ;(async () => {
+        try {
+          // setting the "characters.loading" property to true while data is being fetched
+          // deleting the "characters.errorMsg" property in-case it exists
+          setCharacters((characters) => {
+            return produce(characters, (draft) => {
+              draft.loading = true
+              delete draft.errorMsg
+            })
+          })
+          const { data } = await axios.get(
+            // If "pageNumber" is not an integer, the api is returning the page 1 with 200 status code
+            `${rickAndMorty.character}/?page=${pageNumber}`,
+          )
+          setCharacters((characters) => {
+            return produce(characters, (draft) => {
+              draft.loading = false
+              draft.data = data
+            })
+          })
+        } catch (error) {
+          setCharacters((characters) => {
+            return produce(characters, (draft) => {
+              draft.loading = false
+              draft.errorMsg = 'Failed to fetch characters'
+            })
+          })
+        }
+      })()
+    },
+    [],
+  )
 
   // Below states and actions can be used anywhere in the App easily by using the "useContext" hook
-  const contextValue = {
+  const contextValue: AppContextInterface = {
     states: {
       characters,
     },

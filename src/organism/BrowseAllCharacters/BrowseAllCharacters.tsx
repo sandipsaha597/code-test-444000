@@ -1,6 +1,6 @@
+import { Grid, Pagination, PaginationItem, Typography } from '@mui/material'
 import { useContext, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Grid, Pagination, PaginationItem, Typography } from '@mui/material'
 import styled from 'styled-components'
 import { AppContext } from '../../AppContext/AppContext'
 import ProfileCard from '../../molecules/ProfileCards/ProfileCard'
@@ -30,8 +30,8 @@ const BrowseAllCharacters = () => {
   useEffect(() => {
     // Will page fetch and set on page initial load
     // Will reset, fetch and set again whenever the pageNumber changes
-    fetchAndSetCharacters(pageNumber)
-  }, [pageNumber, fetchAndSetCharacters])
+    fetchAndSetCharacters(pageNumber ?? 1)
+  }, [fetchAndSetCharacters, pageNumber])
   return (
     <>
       <Grid container spacing={4}>
