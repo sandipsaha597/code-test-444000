@@ -1,13 +1,14 @@
 import { Chip, Grid, Typography } from '@mui/material'
 import axios from 'axios'
+import { AnyCnameRecord } from 'dns'
 import produce from 'immer'
 import { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AppContext } from '../AppContext/AppContext'
 import ProfileDataList from '../atoms/Lists/Lists'
 import { Character } from '../types/rickyAndMontyApi'
+import getEpisodes from '../utils/apiCalls/getEpisodes'
 import { getCharacterInfo } from '../utils/utilFunctions'
-import { rickAndMorty } from '../utils/utilVariables'
 
 const ProfilePage = () => {
   // Characters state have 20 character at a time.
@@ -71,23 +72,15 @@ const ProfilePage = () => {
           return v.split('/')[v.split('/').length - 1]
         })
 
-        if (episodeIds.length) {
-          // Can fetch multiple episode infos by providing array of episode([1,2,6])
-          // or string ('1,2,6')
-          // If we pass one episode id (rickAndMorty.episode/5) it will return an Object
-          // If we pass multiple episode ids (rickAndMorty.episode/5,4,7) it will return an Array
-          axios
-            .get(`${rickAndMorty.episode}/${episodeIds}`)
-            .then(({ data }) => {
-              setProfileData((profileData: Character) => {
-                return produce(profileData, (draft) => {
-                  // Saving one dimensional Array
-                  const temp = [data]
-                  draft.episode = temp.flat()
-                })
+        getEpisodes(episodeIds)
+          .then(({ episodeData }) => {
+            setProfileData((profileData: any) => {
+              return produce(profileData, (draft: any) => {
+                draft.episode = episodeData
               })
             })
-        }
+          })
+          .catch((error) => console.error('getEpisodes error', error))
       } catch (error) {
         console.error(error)
       }

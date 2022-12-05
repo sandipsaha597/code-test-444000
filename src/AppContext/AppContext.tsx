@@ -2,10 +2,9 @@ import axios from 'axios'
 // Immer is a tiny package that allows us to work with immutable state in a more convenient way.
 // Using it to set complicated nested react state without any headache
 import produce from 'immer'
-import { createContext, useCallback, useState } from 'react'
+import { createContext, useCallback, useRef, useState } from 'react'
 import { Character, Info } from '../types/rickyAndMontyApi'
 import { rickAndMorty } from '../utils/utilVariables'
-
 // TODO: don't have :any
 export const AppContext = createContext<any>({})
 
